@@ -17,7 +17,7 @@ def start():
 
 
 def pause():
-    pass
+    engine.pause()
 
 
 def restart():
