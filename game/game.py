@@ -1,4 +1,4 @@
-from .internal import Engine
+from .internal import Engine, CardinalDirection
 
 # Expose this API to manage the state of the snake game
 
@@ -21,6 +21,10 @@ def restart():
     pass
 
 
+def change_direction(direction: CardinalDirection):
+    engine.change_direction(direction)
+
+
 def adjust_difficulty():
     pass
 
@@ -30,7 +34,7 @@ def adjust_gameboard_size():
 
 
 def get_score():
-    pass
+    return engine.get_score()
 
 
 def get_high_score():

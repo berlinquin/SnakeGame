@@ -97,7 +97,10 @@ class Engine:
         while not game_over:
             self.advance()
             print(self.board)
-            sleep(2)
+            sleep(1)
+
+    def get_score(self):
+        return len(self.snake)
 
     # Move the snake one square
     def advance(self):
@@ -120,19 +123,16 @@ class Engine:
         elif c == 'X':
             # Game over
             pass
-        # Handle the initial case where snake has only one segment
-        if grow:
-            # DONT pop the old tail
-            # Add the next head to the front of the list
-            self.snake.segments.appendleft(next_head)
-            # Update the board
-            self.board.set(next_head, 'X')
-        else:
+        # Only clear the tail if the snake did not grow
+        if not grow:
             # Pop the old tail off the list of segments
             old_tail = self.snake.segments.pop()
-            # Add the next head to the front of the list
-            self.snake.segments.appendleft(next_head)
             # Update the board
             self.board.set(old_tail, '_')
-            self.board.set(next_head, 'X')
+        # Add the next head to the front of the list
+        self.snake.segments.appendleft(next_head)
+        self.board.set(next_head, 'X')
+
+    def change_direction(self, direction: CardinalDirection):
+        self.snake.orientation = direction
 
