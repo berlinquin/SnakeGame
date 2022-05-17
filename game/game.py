@@ -1,6 +1,7 @@
 # Expose this API to manage the state of the snake game
 
 def start():
+    print("start")
     pass
 
 
