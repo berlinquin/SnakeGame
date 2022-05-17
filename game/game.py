@@ -32,7 +32,7 @@ def change_direction(direction: CardinalDirection):
 
 
 def adjust_difficulty(difficulty: Difficulty):
-    pass
+    engine.adjust_difficulty(difficulty)
 
 
 def adjust_gameboard_size():

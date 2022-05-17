@@ -1,10 +1,11 @@
 import fileinput
 
-from game.game import start, pause, change_direction, CardinalDirection
+from game.game import start, pause, change_direction, adjust_difficulty, CardinalDirection, Difficulty
 
 
 if __name__ == '__main__':
     start()
+    adjust_difficulty(Difficulty.MEDIUM)
     # Very basic driver.
     # At the prompt, type [wasd] and hit enter to move the snake.
     # Type p and hit enter to pause.
