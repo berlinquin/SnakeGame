@@ -1,6 +1,7 @@
 from enum import Enum, auto
 from dataclasses import dataclass
 from time import sleep
+from collections import deque
 
 
 # Three difficulty levels the game can be played at.
@@ -29,10 +30,22 @@ class Point:
 # Represent the snake as two points, giving its head and tail
 @dataclass
 class Snake:
-    head: Point
-    tail: Point
-    length: int
+    # segments is a list of Points, giving each segment of the snake
+    segments: deque
+    # orientation gives the direction the snake is facing
     orientation: CardinalDirection
+
+    def __len__(self):
+        return len(self.segments)
+
+    # Define head and tail attributes on Snake
+    def __getattr__(self, item):
+        if item == 'head' and len(self.segments) > 0:
+            return self.segments[0]
+        elif item == 'tail' and len(self.segments) > 0:
+            return self.segments[-1]
+        else:
+            return None
 
 
 class Board:
@@ -66,7 +79,7 @@ class Engine:
         # The starting point for the snake
         snake_origin = Point(3, 3)
         # The snake object
-        self.snake = Snake(snake_origin, None, 1, CardinalDirection.NORTH)
+        self.snake = Snake(deque([snake_origin]), CardinalDirection.NORTH)
 
         # Track which points are free using a set of points
         self.clear = set([Point(x, y) for x in range(7) for y in range(7)])
@@ -103,31 +116,23 @@ class Engine:
         grow = False
         if c == 'F':
             # Grow the snake
-            self.snake.length += 1
             grow = True
         elif c == 'X':
             # Game over
             pass
         # Handle the initial case where snake has only one segment
-        if self.snake.tail is None:
-            # Update the board with the new location of the snake's head
+        if grow:
+            # DONT pop the old tail
+            # Add the next head to the front of the list
+            self.snake.segments.appendleft(next_head)
+            # Update the board
             self.board.set(next_head, 'X')
-            if grow:
-                self.snake.tail = self.snake.head
-            else:
-                # Clear location of the current head
-                self.board.set(self.snake.head, '_')
-            # Update snake
-            self.snake.head = next_head
         else:
-            # Update the board with the new location of the snake's head
+            # Pop the old tail off the list of segments
+            old_tail = self.snake.segments.pop()
+            # Add the next head to the front of the list
+            self.snake.segments.appendleft(next_head)
+            # Update the board
+            self.board.set(old_tail, '_')
             self.board.set(next_head, 'X')
-            if grow:
-                pass
-            else:
-                # Clear location of the current head
-                self.board.set(self.snake.tail, '_')
-                # Need to update tail...
-            # Update snake
-            self.snake.head = next_head
 
