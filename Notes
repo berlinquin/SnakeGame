@@ -1,1 +1,17 @@
-5 hour mark
+# Status
+
+I got to everything except adjusting the size of the game board.
+This would take some more time to implement, since with my current design
+the Board class is pretty tightly coupled to the AsyncEngine class.
+These classes would need to get cleaned up further before implementing resizing.
+
+# Usage
+
+Running the script main.py will start a simple driver for the engine.
+It allows you to control the direction of the snake, and to pause and restart the game.
+
+For convenience, the game engine also prints out a representation of
+the board with each movement of the snake.
+This would be unnecessary with a more sophisticated driver that
+could switch between querying for input from the user and
+querying the game engine for an updated state.
