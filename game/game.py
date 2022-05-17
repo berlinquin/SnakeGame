@@ -1,4 +1,4 @@
-from .internal import AsyncEngine, CardinalDirection
+from .internal import AsyncEngine, CardinalDirection, Difficulty
 
 # Expose this API to manage the state of the snake game
 
@@ -31,7 +31,7 @@ def change_direction(direction: CardinalDirection):
     engine.change_direction(direction)
 
 
-def adjust_difficulty():
+def adjust_difficulty(difficulty: Difficulty):
     pass
 
 

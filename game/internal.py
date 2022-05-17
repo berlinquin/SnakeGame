@@ -14,6 +14,15 @@ class Difficulty(Enum):
     HARD = auto()
 
 
+# The number of seconds between frames for the different
+# levels of difficulty
+sleep_intervals = {
+    Difficulty.EASY: 3,
+    Difficulty.MEDIUM: 2,
+    Difficulty.HARD: 1
+}
+
+
 # Available directions for the snake to move
 class CardinalDirection(Enum):
     NORTH = auto()
@@ -71,8 +80,6 @@ class Board:
         self.board[p.x][p.y] = c
 
 
-
-
 class AsyncEngine(threading.Thread):
     def __init__(self):
         threading.Thread.__init__(self)
@@ -81,6 +88,9 @@ class AsyncEngine(threading.Thread):
         # Represent the board as a list of lists of chars
         self.board_dimensions = 7
         self.board = Board(self.board_dimensions)
+
+        # Start in medium difficulty
+        self.difficulty = Difficulty.MEDIUM
 
         # The starting point for the snake
         snake_origin = Point(3, 3)
@@ -109,12 +119,13 @@ class AsyncEngine(threading.Thread):
                 if self.running:
                     self.advance()
                     print(self.board)
-            sleep(2)
+            # Sleep for the number of seconds at the given difficulty level
+            sleep(sleep_intervals[self.difficulty])
         score = self.get_score()
-        high_score = get_high_score()
+        high_score = self.get_high_score()
         if score > high_score:
             print("New high score: {}".format(score))
-            set_high_score(score)
+            self.set_high_score(score)
         print("Game over!")
 
     def start_game(self):
@@ -158,6 +169,10 @@ class AsyncEngine(threading.Thread):
                             or (direction in horizontal_axis and self.snake.orientation in vertical_axis)
             if opposite_axes:
                 self.snake.orientation = direction
+
+    def adjust_difficulty(self, difficulty: Difficulty):
+        with self.engine_lock:
+            self.difficulty = difficulty
 
     # Move the snake one square
     # Requires engine_lock to already have been acquired!
