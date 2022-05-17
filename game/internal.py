@@ -23,6 +23,18 @@ sleep_intervals = {
 }
 
 
+class BoardSize(Enum):
+    LARGE = auto()
+    MEDIUM = auto()
+    SMALL = auto()
+
+
+board_sizes = {
+    BoardSize.LARGE: 15,
+    BoardSize.MEDIUM: 11,
+    BoardSize.SMALL: 7
+}
+
 # Available directions for the snake to move
 class CardinalDirection(Enum):
     NORTH = auto()
@@ -173,6 +185,9 @@ class AsyncEngine(threading.Thread):
     def adjust_difficulty(self, difficulty: Difficulty):
         with self.engine_lock:
             self.difficulty = difficulty
+
+    def adjust_gameboard_size(self, board_size: BoardSize):
+        pass
 
     # Move the snake one square
     # Requires engine_lock to already have been acquired!

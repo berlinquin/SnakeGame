@@ -1,4 +1,4 @@
-from .internal import AsyncEngine, CardinalDirection, Difficulty
+from .internal import AsyncEngine, CardinalDirection, Difficulty, BoardSize
 
 # Expose this API to manage the state of the snake game
 
@@ -34,8 +34,8 @@ def adjust_difficulty(difficulty: Difficulty):
     engine.adjust_difficulty(difficulty)
 
 
-def adjust_gameboard_size():
-    pass
+def adjust_gameboard_size(board_size: BoardSize):
+    engine.adjust_gameboard_size(board_size)
 
 
 def get_score():
