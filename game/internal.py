@@ -230,8 +230,9 @@ class AsyncEngine(threading.Thread):
             # Grow the snake
             grow = True
         elif c == 'X':
-            # Game over
+            # Game over, return early
             self.game_over = True
+            return
         # Only clear the tail if the snake did not grow
         if not grow:
             # Pop the old tail off the list of segments
