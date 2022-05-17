@@ -75,7 +75,8 @@ class Engine:
         self.board.set(self.snake.head, 'X')
 
         # food is a random point that is clear
-        self.food = self.clear.pop()
+        # self.food = self.clear.pop()
+        self.food = Point(0, 3)
         self.board.set(self.food, 'F')
 
     def start(self):
@@ -96,7 +97,37 @@ class Engine:
             next_head = Point(next_x, self.snake.head.y)
         elif self.snake.orientation == CardinalDirection.EAST:
             pass
-        # if self.board[next_head.x][next_head.y] == '':
-        # if self.snake.tail is None:
-        #     self.board[next_head.x][next_head.y]
+        elif self.snake.orientation == CardinalDirection.WEST:
+            pass
+        c = self.board.get(next_head)
+        grow = False
+        if c == 'F':
+            # Grow the snake
+            self.snake.length += 1
+            grow = True
+        elif c == 'X':
+            # Game over
+            pass
+        # Handle the initial case where snake has only one segment
+        if self.snake.tail is None:
+            # Update the board with the new location of the snake's head
+            self.board.set(next_head, 'X')
+            if grow:
+                self.snake.tail = self.snake.head
+            else:
+                # Clear location of the current head
+                self.board.set(self.snake.head, '_')
+            # Update snake
+            self.snake.head = next_head
+        else:
+            # Update the board with the new location of the snake's head
+            self.board.set(next_head, 'X')
+            if grow:
+                pass
+            else:
+                # Clear location of the current head
+                self.board.set(self.snake.tail, '_')
+                # Need to update tail...
+            # Update snake
+            self.snake.head = next_head
 
