@@ -70,12 +70,10 @@ class Board:
         self.board[p.x][p.y] = c
 
 
-engine_lock = threading.Lock()
-
-
 class AsyncEngine(threading.Thread):
     def __init__(self):
         threading.Thread.__init__(self)
+        self.engine_lock = threading.Lock()
 
         # Represent the board as a list of lists of chars
         self.board_dimensions = 7
@@ -102,32 +100,32 @@ class AsyncEngine(threading.Thread):
     # The main game loop
     def run(self):
         while True:
-            with engine_lock:
+            with self.engine_lock:
                 if self.running:
                     self.advance()
                     print(self.board)
             sleep(2)
 
     def start_game(self):
-        with engine_lock:
+        with self.engine_lock:
             self.running = True
 
     def pause(self):
-        with engine_lock:
+        with self.engine_lock:
             self.running = False
 
     def restart(self):
-        with engine_lock:
+        with self.engine_lock:
             self.running = True
 
     def get_score(self):
-        with engine_lock:
+        with self.engine_lock:
             return len(self.snake)
 
     def change_direction(self, direction: CardinalDirection):
         vertical_axis = {CardinalDirection.NORTH, CardinalDirection.SOUTH}
         horizontal_axis = {CardinalDirection.EAST, CardinalDirection.WEST}
-        with engine_lock:
+        with self.engine_lock:
             # Only change direction if changing to a different axis
             opposite_axes = (direction in vertical_axis and self.snake.orientation in horizontal_axis) \
                             or (direction in horizontal_axis and self.snake.orientation in vertical_axis)
