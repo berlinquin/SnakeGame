@@ -1,12 +1,16 @@
-from .internal import print_board
+from .internal import Engine
+
 # Expose this API to manage the state of the snake game
+
+# instance of the Engine class to drive the game
+engine = None
+
 
 def start():
     print("start")
-    game_over = False
-    while not game_over:
-        print_board()
-        game_over = True
+    global engine
+    engine = Engine()
+    engine.start()
 
 
 def pause():
