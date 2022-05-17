@@ -1,8 +1,12 @@
+from .internal import print_board
 # Expose this API to manage the state of the snake game
 
 def start():
     print("start")
-    pass
+    game_over = False
+    while not game_over:
+        print_board()
+        game_over = True
 
 
 def pause():
