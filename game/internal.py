@@ -35,14 +35,33 @@ class Snake:
     orientation: CardinalDirection
 
 
+class Board:
+    def __init__(self, N: int):
+        # N must be odd
+        self.N = N
+        self.board = [['_'] * self.N for i in range(self.N)]
+
+    def __str__(self):
+        out = ''
+        for row in self.board:
+            for c in row:
+                out += c
+            out += "\n"
+        return out
+
+    def get(self, p: Point):
+        return self.board[p.x][p.y]
+
+    def set(self, p: Point, c):
+        self.board[p.x][p.y] = c
+
+
 class Engine:
     def __init__(self):
-        # The dimensions of the board.
-        # Must be NxN, where N is odd.
-        self.board_dimensions = 7
 
         # Represent the board as a list of lists of chars
-        self.board = [['_'] * 7 for i in range(7)]
+        self.board_dimensions = 7
+        self.board = Board(self.board_dimensions)
 
         # The starting point for the snake
         snake_origin = Point(3, 3)
@@ -53,17 +72,17 @@ class Engine:
         self.clear = set([Point(x, y) for x in range(7) for y in range(7)])
         self.clear.remove(snake_origin)
 
-        self.board[self.snake.head.x][self.snake.head.y] = 'X'
+        self.board.set(self.snake.head, 'X')
 
         # food is a random point that is clear
         self.food = self.clear.pop()
-        self.board[self.food.x][self.food.y] = 'F'
+        self.board.set(self.food, 'F')
 
     def start(self):
         game_over = False
         while not game_over:
             self.advance()
-            self.print_board()
+            print(self.board)
             sleep(2)
 
     # Move the snake one square
@@ -80,11 +99,4 @@ class Engine:
         # if self.board[next_head.x][next_head.y] == '':
         # if self.snake.tail is None:
         #     self.board[next_head.x][next_head.y]
-
-    # Print board to screen
-    def print_board(self):
-        for row in self.board:
-            for c in row:
-                print(c, end='')
-            print()
 
