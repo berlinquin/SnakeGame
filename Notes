@@ -15,3 +15,5 @@ the board with each movement of the snake.
 This would be unnecessary with a more sophisticated driver that
 could switch between querying for input from the user and
 querying the game engine for an updated state.
+
+The high score is saved to a file called high_score.txt.
