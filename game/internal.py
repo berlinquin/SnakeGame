@@ -96,15 +96,18 @@ class AsyncEngine(threading.Thread):
 
         # True if running, False if paused
         self.running = False
+        # True if a game is in progress, False if game has ended
+        self.game_over = False
 
     # The main game loop
     def run(self):
-        while True:
+        while not self.game_over:
             with self.engine_lock:
                 if self.running:
                     self.advance()
                     print(self.board)
             sleep(2)
+        print("Game over!")
 
     def start_game(self):
         with self.engine_lock:
@@ -155,7 +158,7 @@ class AsyncEngine(threading.Thread):
             grow = True
         elif c == 'X':
             # Game over
-            self.running = False
+            self.game_over = True
         # Only clear the tail if the snake did not grow
         if not grow:
             # Pop the old tail off the list of segments
