@@ -7,7 +7,6 @@ engine = None
 
 
 def start():
-    print("start")
     global engine
     engine = AsyncEngine()
     # Start the thread, calling engine.run()
@@ -47,5 +46,6 @@ def get_high_score():
     return engine.get_high_score()
 
 
+# Return a string representation of the board
 def get_state():
-    pass
+    return str(engine)

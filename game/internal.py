@@ -118,7 +118,7 @@ class AsyncEngine(threading.Thread):
             with self.engine_lock:
                 if self.running:
                     self.advance()
-                    print(self.board)
+                    print(self)
             # Sleep for the number of seconds at the given difficulty level
             sleep(sleep_intervals[self.difficulty])
         score = self.get_score()
@@ -216,3 +216,6 @@ class AsyncEngine(threading.Thread):
         if grow:
             self.food = self.clear.pop()
             self.board.set(self.food, 'F')
+
+    def __str__(self):
+        return str(self.board)
