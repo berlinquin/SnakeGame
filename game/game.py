@@ -20,8 +20,11 @@ def pause():
     engine.pause()
 
 
+# Implement this as "resume", continuing an existing game,
+# instead of starting a new game.
+# (Assuming that's the intent as the opposite of "pause")
 def restart():
-    pass
+    engine.restart()
 
 
 def change_direction(direction: CardinalDirection):

@@ -116,6 +116,10 @@ class AsyncEngine(threading.Thread):
         with engine_lock:
             self.running = False
 
+    def restart(self):
+        with engine_lock:
+            self.running = True
+
     def get_score(self):
         with engine_lock:
             return len(self.snake)
