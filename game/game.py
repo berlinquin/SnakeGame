@@ -1,4 +1,4 @@
-from .internal import Engine, CardinalDirection
+from .internal import AsyncEngine, CardinalDirection
 
 # Expose this API to manage the state of the snake game
 
@@ -9,8 +9,11 @@ engine = None
 def start():
     print("start")
     global engine
-    engine = Engine()
+    engine = AsyncEngine()
+    # Start the thread, calling engine.run()
     engine.start()
+    # Start the game
+    engine.start_game()
 
 
 def pause():
