@@ -6,6 +6,7 @@ from .internal import AsyncEngine, CardinalDirection, Difficulty, BoardSize
 engine = None
 
 
+# Start a game of snake in another thread
 def start():
     global engine
     engine = AsyncEngine()
@@ -15,6 +16,7 @@ def start():
     engine.start_game()
 
 
+# Pause the game
 def pause():
     engine.pause()
 
@@ -26,22 +28,27 @@ def restart():
     engine.restart()
 
 
+# Change the direction of the snake
 def change_direction(direction: CardinalDirection):
     engine.change_direction(direction)
 
 
+# Adjust the difficulty of the game
 def adjust_difficulty(difficulty: Difficulty):
     engine.adjust_difficulty(difficulty)
 
 
+# Adjust the size of the game board
 def adjust_gameboard_size(board_size: BoardSize):
     engine.adjust_gameboard_size(board_size)
 
 
+# Return the score of the current game
 def get_score():
     return engine.get_score()
 
 
+# Return the high score across multiple games
 def get_high_score():
     return engine.get_high_score()
 

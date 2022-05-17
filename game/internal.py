@@ -53,7 +53,9 @@ class Point:
 # Represent the snake as two points, giving its head and tail
 @dataclass
 class Snake:
-    # segments is a list of Points, giving each segment of the snake
+    # segments is a list of Points, giving each segment of the snake.
+    # Use a deque because the only operations performed on segments will be
+    # popping from the end and appending to the start.
     segments: deque
     # orientation gives the direction the snake is facing
     orientation: CardinalDirection
