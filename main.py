@@ -1,6 +1,8 @@
 import fileinput
 
-from game.game import start, pause, change_direction, adjust_difficulty, get_state, CardinalDirection, Difficulty
+from game.game import start, pause, restart,\
+    change_direction, adjust_difficulty, get_state,\
+    CardinalDirection, Difficulty
 
 
 if __name__ == '__main__':
@@ -11,6 +13,7 @@ if __name__ == '__main__':
     # Very basic driver.
     # At the prompt, type [wasd] and hit enter to move the snake.
     # Type p and hit enter to pause.
+    # Type r and hit enter to resume.
     # Type q and hit enter to quit.
     for line in fileinput.input():
         c = line[0]
@@ -24,5 +27,7 @@ if __name__ == '__main__':
             change_direction(CardinalDirection.EAST)
         elif c == 'p':
             pause()
+        elif c == 'r':
+            restart()
         elif c == 'q':
             break
