@@ -71,12 +71,17 @@ class Snake:
             return None
 
 
+# Represent the board as a list of lists of strings
 class Board:
+    # Use this value to represent an empty field on the board
+    EMPTY = '_'
+
     def __init__(self, N: int):
         # N must be odd
         self.N = N
-        self.board = [['_'] * self.N for i in range(self.N)]
+        self.board = [[self.EMPTY] * self.N for i in range(self.N)]
 
+    # Return a string representation of the board
     def __str__(self):
         out = ''
         for row in self.board:
@@ -85,19 +90,26 @@ class Board:
             out += "\n"
         return out
 
+    # Get the string at the given point on the board
     def get(self, p: Point):
         return self.board[p.x][p.y]
 
+    # Set the string at the given point on the board
     def set(self, p: Point, c):
         self.board[p.x][p.y] = c
+
+    # Clear the board at the given point
+    def clear(self, p: Point):
+        self.set(p, self.EMPTY)
 
 
 class AsyncEngine(threading.Thread):
     def __init__(self):
+        # Set up threading
         threading.Thread.__init__(self)
         self.engine_lock = threading.Lock()
 
-        # Represent the board as a list of lists of chars
+        # Initialize the game board
         self.board_dimensions = 7
         self.board = Board(self.board_dimensions)
 
@@ -106,14 +118,14 @@ class AsyncEngine(threading.Thread):
 
         # The starting point for the snake
         snake_origin = Point(3, 3)
-        # The snake object
+        # Start the snake in the middle of the board, moving North
         self.snake = Snake(deque([snake_origin]), CardinalDirection.NORTH)
+        # Mark the snake's location on the board
+        self.board.set(self.snake.head, 'X')
 
-        # Track which points are free using a set of points
+        # Track which points are free using a set
         self.clear = set([Point(x, y) for x in range(7) for y in range(7)])
         self.clear.remove(snake_origin)
-
-        self.board.set(self.snake.head, 'X')
 
         # food is a random point that is clear
         self.food = self.clear.pop()
@@ -133,6 +145,7 @@ class AsyncEngine(threading.Thread):
                     print(self)
             # Sleep for the number of seconds at the given difficulty level
             sleep(sleep_intervals[self.difficulty])
+        # Once the game has ended, update high score if necessary
         score = self.get_score()
         high_score = self.get_high_score()
         if score > high_score:
@@ -172,6 +185,7 @@ class AsyncEngine(threading.Thread):
             with open('high_score.txt', 'w') as f:
                 f.write(str(high_score))
 
+    # Change the direction the snake is moving
     def change_direction(self, direction: CardinalDirection):
         vertical_axis = {CardinalDirection.NORTH, CardinalDirection.SOUTH}
         horizontal_axis = {CardinalDirection.EAST, CardinalDirection.WEST}
@@ -192,6 +206,9 @@ class AsyncEngine(threading.Thread):
     # Move the snake one square
     # Requires engine_lock to already have been acquired!
     def advance(self):
+        # Determine which point the snake moves to next.
+        # In the case where the snake would hit the edge of the board,
+        # wrap to the other edge of the board.
         next_head = None
         if self.snake.orientation == CardinalDirection.NORTH:
             next_x = (self.snake.head.x - 1) % self.board_dimensions
@@ -205,7 +222,9 @@ class AsyncEngine(threading.Thread):
         elif self.snake.orientation == CardinalDirection.WEST:
             next_y = (self.snake.head.y - 1) % self.board_dimensions
             next_head = Point(self.snake.head.x, next_y)
+        # True if the snake should grow, False otherwise
         grow = False
+        # Get the string at the location the snake will move to
         c = self.board.get(next_head)
         if c == 'F':
             # Grow the snake
@@ -218,7 +237,7 @@ class AsyncEngine(threading.Thread):
             # Pop the old tail off the list of segments
             old_tail = self.snake.segments.pop()
             # Update the board
-            self.board.set(old_tail, '_')
+            self.board.clear(old_tail)
             # This point is now clear
             self.clear.add(old_tail)
         # Add the next head to the front of the list
@@ -232,5 +251,6 @@ class AsyncEngine(threading.Thread):
             self.food = self.clear.pop()
             self.board.set(self.food, 'F')
 
+    # Return a string representation of the game
     def __str__(self):
         return str(self.board)
