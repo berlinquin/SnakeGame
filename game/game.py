@@ -44,7 +44,7 @@ def get_score():
 
 
 def get_high_score():
-    pass
+    return engine.get_high_score()
 
 
 def get_state():

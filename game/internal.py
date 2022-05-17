@@ -3,6 +3,7 @@ from enum import Enum, auto
 from dataclasses import dataclass
 from time import sleep
 from collections import deque
+from pathlib import Path
 
 
 # Three difficulty levels the game can be played at.
@@ -70,6 +71,8 @@ class Board:
         self.board[p.x][p.y] = c
 
 
+
+
 class AsyncEngine(threading.Thread):
     def __init__(self):
         threading.Thread.__init__(self)
@@ -107,6 +110,11 @@ class AsyncEngine(threading.Thread):
                     self.advance()
                     print(self.board)
             sleep(2)
+        score = self.get_score()
+        high_score = get_high_score()
+        if score > high_score:
+            print("New high score: {}".format(score))
+            set_high_score(score)
         print("Game over!")
 
     def start_game(self):
@@ -124,6 +132,22 @@ class AsyncEngine(threading.Thread):
     def get_score(self):
         with self.engine_lock:
             return len(self.snake)
+
+    def get_high_score(self):
+        with self.engine_lock:
+            file_path = Path('high_score.txt')
+            # If the high score file does not exist, return 0
+            if not file_path.exists():
+                return 0
+            # If file can be opened, return the first line of the file converted to an int
+            with open(file_path, 'r') as f:
+                return int(f.readline())
+
+    def set_high_score(self, high_score: int):
+        with self.engine_lock:
+            # Convert high_score to a string and write to the file
+            with open('high_score.txt', 'w') as f:
+                f.write(str(high_score))
 
     def change_direction(self, direction: CardinalDirection):
         vertical_axis = {CardinalDirection.NORTH, CardinalDirection.SOUTH}
