@@ -93,8 +93,7 @@ class AsyncEngine(threading.Thread):
         self.board.set(self.snake.head, 'X')
 
         # food is a random point that is clear
-        # self.food = self.clear.pop()
-        self.food = Point(0, 3)
+        self.food = self.clear.pop()
         self.board.set(self.food, 'F')
 
         # True if running, False if paused
@@ -143,8 +142,8 @@ class AsyncEngine(threading.Thread):
         elif self.snake.orientation == CardinalDirection.WEST:
             next_y = (self.snake.head.y - 1) % self.board_dimensions
             next_head = Point(self.snake.head.x, next_y)
-        c = self.board.get(next_head)
         grow = False
+        c = self.board.get(next_head)
         if c == 'F':
             # Grow the snake
             grow = True
@@ -157,7 +156,15 @@ class AsyncEngine(threading.Thread):
             old_tail = self.snake.segments.pop()
             # Update the board
             self.board.set(old_tail, '_')
+            # This point is now clear
+            self.clear.add(old_tail)
         # Add the next head to the front of the list
         self.snake.segments.appendleft(next_head)
         self.board.set(next_head, 'X')
-
+        # Remove next_head from clear if present
+        if next_head in self.clear:
+            self.clear.remove(next_head)
+        # If the food was consumed, put a new food somewhere on the board
+        if grow:
+            self.food = self.clear.pop()
+            self.board.set(self.food, 'F')
